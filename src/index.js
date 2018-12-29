@@ -63,7 +63,7 @@ let stories = [
 let lines = [
     {
         id: '1',
-        storyId: '2',
+        story: '2',
         name: 'main',
         description: 'The main story line',
         colour: 'black',
@@ -71,7 +71,7 @@ let lines = [
     },
     {
         id: '2',
-        storyId: '1',
+        story: '1',
         name: 'Jelly',
         description: 'Jelly\'s story arc',
         colour: 'yellow',
@@ -79,7 +79,7 @@ let lines = [
     },
     {
         id: '3',
-        storyId: '1',
+        story: '1',
         name: 'Anami',
         description: 'Anami\'s story arc',
         colour: 'red',
@@ -87,7 +87,7 @@ let lines = [
     }, 
     { 
         id: '4',
-        storyId: '2',
+        story: '2',
         name: 'Boo',
         description: 'Boo\'s story arc',
         colour: 'blue',
@@ -133,7 +133,7 @@ const typeDefs = `
         name: String!,
         description: String!, 
         author: ID!, 
-        storyId: ID!,
+        story: ID!,
         colour: String!
     }
 
@@ -164,7 +164,17 @@ const typeDefs = `
         description: String!
         author: User!
         colour: String!
-        storyId: [Story!]
+        story: [Story!]
+    }
+
+    type Card {
+        id: ID!
+        title: String!
+        text: String!
+        type: String!
+        author: ID!
+        story: ID!
+        line: ID
     }
 
 `
@@ -231,7 +241,7 @@ const resolvers = {
                 const match = story.author === args.id
 
                 if(match) {
-                    lines = lines.filter((line) => line.storyId !== story.id)
+                    lines = lines.filter((line) => line.story !== story.id)
                 }
 
                 return !match
@@ -265,13 +275,13 @@ const resolvers = {
 
             const deletedStory = stories.splice(storyIndex, 1)
 
-            lines = lines.filter((line) => line.storyId !== args.id)
+            lines = lines.filter((line) => line.story !== args.id)
 
             return deletedStory[0]
         },
         createLine(parent, args, ctx, info) {
             const userExists = users.some((user) => user.id === args.data.author)
-            const storyExists = stories.find((story) => story.id === args.data.storyId)
+            const storyExists = stories.find((story) => story.id === args.data.story)
             
             if(!userExists) {
                 throw new Error('User not found')
@@ -329,9 +339,9 @@ const resolvers = {
         }
     },
     Line: {
-        storyId(parent, args, ctx, info) {
-            return storyId.filter((story) => {
-                return story.id === parent.storyId
+        story(parent, args, ctx, info) {
+            return story.filter((story) => {
+                return story.id === parent.story
             })
         },
         author(parent, args, ctx, info) {
