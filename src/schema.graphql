@@ -1,0 +1,91 @@
+ type Query {
+        user: User!
+        users(query: String): [User!]!
+        stories(query: String): [Story!]!
+        lines(query: String): [Line!]!
+        cards(query: String): [Card!]!
+    }
+
+    type Mutation {
+        createUser(data: CreateUserInput): User!
+        deleteUser(id: ID!): User!
+        createStory(data: CreateStoryInput): Story!
+        deleteStory(id: ID!): Story!
+        createLine(data: CreateLineInput): Line!
+        deleteLine(id: ID!): Line!
+        createCard(data: CreateCardInput): Card!
+        deleteCard(id: ID!): Card!
+    }
+
+    input CreateUserInput {
+        name: String!,
+        email: String!,
+        type: String!
+    }
+
+     input CreateStoryInput {
+        title: String!,
+        body: String!,
+        type: String!,
+        author: ID!,
+        published: Boolean!
+    }
+
+    input CreateLineInput {
+        name: String!,
+        description: String!, 
+        author: ID!, 
+        story: ID!,
+        colour: String!
+    }
+
+    input CreateCardInput {
+        title: String!
+        text: String!
+        type: String!
+        author: ID!
+        story: ID!
+        line: ID!
+    }
+
+    type User {
+        id: ID!
+        name: String!
+        email: String!
+        type: String!
+        stories: [Story!]!
+        lines: [Line!]!
+        cards: [Card!]!
+        subscribers: Int!
+        isMember: Boolean!
+    }
+
+    type Story {
+        id: ID!
+        title: String!
+        body: String!
+        type: String!
+        author: User!
+        lines: [Line!]!
+        published: Boolean
+    }
+
+    type Line {
+        id: ID!
+        name: String!
+        description: String!
+        author: User!
+        stories: Story!
+        cards: [Card!]
+        colour: String!
+    }
+
+    type Card {
+        id: ID!
+        title: String!
+        text: String!
+        type: String!
+        author: User!
+        stories: Story!
+        line: Line!
+    }
