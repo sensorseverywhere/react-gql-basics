@@ -96,6 +96,18 @@ let lines = [
 
 ]
 
+let cards = [
+    {
+        id: '1',
+        author: '1',
+        story: '2',
+        line: '1',
+        title: "Jellys Character Card",
+        text: "Jelly first meets Boo",
+        type: "Character"      
+    }
+]
+
 
 // Type definitions (schema)
 const typeDefs = `
@@ -104,6 +116,7 @@ const typeDefs = `
         users(query: String): [User!]!
         stories(query: String): [Story!]!
         lines(query: String): [Line!]!
+        cards(query: String): [Card!]!
     }
 
     type Mutation {
@@ -113,6 +126,8 @@ const typeDefs = `
         deleteStory(id: ID!): Story!
         createLine(data: CreateLineInput): Line!
         deleteLine(id: ID!): Line!
+        createCard(data: CreateCardInput): Card!
+        deleteCard(id: ID!): Card!
     }
 
     input CreateUserInput {
@@ -137,6 +152,15 @@ const typeDefs = `
         colour: String!
     }
 
+    input CreateCardInput {
+        title: String!
+        text: String!
+        type: String!
+        author: ID!
+        story: ID!
+        line: ID!
+    }
+
     type User {
         id: ID!
         name: String!
@@ -144,6 +168,7 @@ const typeDefs = `
         type: String!
         stories: [Story!]!
         lines: [Line!]!
+        cards: [Card!]!
         subscribers: Int!
         isMember: Boolean!
     }
@@ -163,8 +188,9 @@ const typeDefs = `
         name: String!
         description: String!
         author: User!
+        story: Story!
+        cards: [Card!]
         colour: String!
-        story: [Story!]
     }
 
     type Card {
@@ -172,9 +198,9 @@ const typeDefs = `
         title: String!
         text: String!
         type: String!
-        author: ID!
-        story: ID!
-        line: ID
+        author: User!
+        story: Story!
+        line: Line!
     }
 
 `
@@ -209,6 +235,11 @@ const resolvers = {
             if(!args.query) {
                 return lines
             }
+        },
+        cards(parent, args, ctx, info) {
+            if(!args.query) {
+                return cards
+            }
         }
     },
     Mutation: {
@@ -241,12 +272,14 @@ const resolvers = {
                 const match = story.author === args.id
 
                 if(match) {
+                    cards = cards.filter((card) => card.line !== line.id)
                     lines = lines.filter((line) => line.story !== story.id)
                 }
 
                 return !match
             })
 
+            cards = cards.filter((card) => card.author !== args.id)
             lines = lines.filter((line) => line.author !== args.id)
 
             return deletedUsers[0]
@@ -311,7 +344,45 @@ const resolvers = {
 
             return deletedLine[0]
 
-        }
+        },
+        createCard(parent, args, ctx, info) {
+            const userExists = users.some((user) => user.id === args.data.author)
+            const storyExists = stories.find((story) => story.id === args.data.story)
+            const lineExists = lines.find((line) => line.id === args.data.line)
+            
+            if(!userExists) {
+                throw new Error('User not found')
+            }
+
+            if(!storyExists) {
+                throw new Error('Story not found')
+            }
+
+            if(!lineExists) {
+                throw new Error('Line not found')
+            }
+
+            const card = {
+                id: uuidv4(),
+                ...args.data
+            }
+
+            cards.push(card);
+
+            return card
+        },
+        deleteCard(parent, args, ctx, info) {
+            const cardIndex = cards.findIndex((card) => card.id === args.id)
+
+            if(cardIndex === -1) {
+                throw new Error('Line not found')
+            }
+
+            const deletedCard = cards.splice(cardIndex, 1)
+
+            return deletedCard[0]
+
+        },
     },
     Story: {
         author(parent, args, ctx, info){
@@ -336,9 +407,31 @@ const resolvers = {
             return lines.filter((line) => {
                 return line.author === parent.id
             })
+        }, 
+        cards(parent, args, ctx, info) {
+            return cards.filter((card) => {
+                return card.author === parent.id
+            })
         }
     },
     Line: {
+        story(parent, args, ctx, info) {
+            return story.filter((story) => {
+                return story.id === parent.story
+            })
+        },
+        author(parent, args, ctx, info) {
+            return users.find((user) => {
+                return user.id === parent.author
+            })
+        },
+        cards(parent, args, ctx, info) {
+            return cards.filter((card) => {
+                return card.line === parent.id
+            })
+        }
+    },
+    Card: {
         story(parent, args, ctx, info) {
             return story.filter((story) => {
                 return story.id === parent.story
