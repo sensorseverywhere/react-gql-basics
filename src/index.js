@@ -50,20 +50,12 @@ let stories = [
         author: '2',
         published: true
     },
-    {
-        id: '3',
-        title: 'My third piece of content',
-        body: 'Here is some content',
-        type: 'Comp',
-        author: '1',
-        published: true
-    }
 ]
 
 let lines = [
     {
         id: '1',
-        story: '2',
+        story: '1',
         name: 'main',
         description: 'The main story line',
         colour: 'black',
@@ -79,15 +71,15 @@ let lines = [
     },
     {
         id: '3',
-        story: '1',
+        story: '2',
         name: 'Anami',
         description: 'Anami\'s story arc',
         colour: 'red',
-        author: '1'
+        author: '2'
     }, 
     { 
         id: '4',
-        story: '2',
+        story: '1',
         name: 'Boo',
         description: 'Boo\'s story arc',
         colour: 'blue',
@@ -100,8 +92,26 @@ let cards = [
     {
         id: '1',
         author: '1',
-        story: '2',
+        story: '1',
         line: '1',
+        title: "Jellys Character Card",
+        text: "Jelly first meets Boo",
+        type: "Character"      
+    },
+    {
+        id: '2',
+        author: '2',
+        story: '2',
+        line: '3',
+        title: "Jellys Character Card",
+        text: "Jelly first meets Boo",
+        type: "Character"      
+    },
+    {
+        id: '3',
+        author: '1',
+        story: '2',
+        line: '3',
         title: "Jellys Character Card",
         text: "Jelly first meets Boo",
         type: "Character"      
@@ -158,7 +168,7 @@ const typeDefs = `
         type: String!
         author: ID!
         story: ID!
-        line: ID!
+        lines: ID!
     }
 
     type User {
@@ -188,7 +198,7 @@ const typeDefs = `
         name: String!
         description: String!
         author: User!
-        story: Story!
+        stories: Story!
         cards: [Card!]
         colour: String!
     }
@@ -199,8 +209,8 @@ const typeDefs = `
         text: String!
         type: String!
         author: User!
-        story: Story!
-        line: Line!
+        stories: Story!
+        lines: Line!
     }
 
 `
@@ -269,14 +279,24 @@ const resolvers = {
             const deletedUsers = users.splice(userIndex, 1)
 
             stories = stories.filter((story) => {
+                //check to see if there is an id match between the story and the author
                 const match = story.author === args.id
 
                 if(match) {
-                    cards = cards.filter((card) => card.line !== line.id)
                     lines = lines.filter((line) => line.story !== story.id)
                 }
 
                 return !match
+            })
+
+            lines = lines.filter((line) => {
+                const lineMatch = line.author === args.id
+
+                if(lineMatch) {
+                    cards = cards.filter((card) => card.line !== line.id)
+                }
+
+                return !lineMatch
             })
 
             cards = cards.filter((card) => card.author !== args.id)
@@ -308,6 +328,7 @@ const resolvers = {
 
             const deletedStory = stories.splice(storyIndex, 1)
 
+            cards = cards.filter((card) => card.story !== args.id)
             lines = lines.filter((line) => line.story !== args.id)
 
             return deletedStory[0]
@@ -341,6 +362,8 @@ const resolvers = {
             }
 
             const deletedLine = lines.splice(lineIndex, 1)
+
+            cards = cards.filter((card) => card.lines !== args.id)
 
             return deletedLine[0]
 
@@ -415,8 +438,8 @@ const resolvers = {
         }
     },
     Line: {
-        story(parent, args, ctx, info) {
-            return story.filter((story) => {
+        stories(parent, args, ctx, info) {
+            return stories.find((story) => {
                 return story.id === parent.story
             })
         },
@@ -432,16 +455,22 @@ const resolvers = {
         }
     },
     Card: {
-        story(parent, args, ctx, info) {
-            return story.filter((story) => {
-                return story.id === parent.story
-            })
-        },
         author(parent, args, ctx, info) {
             return users.find((user) => {
                 return user.id === parent.author
             })
+        },
+        stories(parent, args, ctx, info) {
+            return stories.find((story) => {
+                return story.id === parent.story
+            })
+        },
+        lines(parent, args, ctx, info) {
+            return lines.find((line) => {
+                return line.id === parent.line
+            })
         }
+
     }
 }
 
