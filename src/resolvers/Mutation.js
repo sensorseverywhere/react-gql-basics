@@ -53,6 +53,32 @@ const Mutation =
 
         return deletedUsers[0]
     },
+    updateUser(parent, args, { db }, info) {
+
+        const { id, data } = args
+        const user = db.users.find((user) => user.id === id)
+
+        if(!user) {
+            throw new Error('User not found')
+        }
+
+        if(typeof data.email === 'string') {
+            const emailTaken = db.users.some((user) => user.email === data.email)
+
+            if(emailTaken) {
+                throw new Error('Email taken')
+            }
+
+            user.email = data.email
+        }
+
+        if(typeof data.name === 'string') {
+            user.name = data.name
+        }
+
+        return user
+
+    },
     createStory(parent, args, { db }, info) {
         const userExists = db.users.some((user) => user.id === args.data.author)
 
@@ -65,6 +91,32 @@ const Mutation =
         }
 
         db.stories.push(story)
+
+        return story
+    },
+    updateStory(parent, args, { db }, info) {
+        const { id, data } = args
+        const story = db.stories.find((story) => story.id === id)
+
+        if(!story) {
+            throw new Error('Story not found')
+        }
+
+        if(typeof data.title === 'string') {
+            story.title = data.title
+        }
+
+        if(typeof data.body === 'string') {
+            story.body = data.body
+        }
+
+        if(typeof data.type === 'string') {
+            story.type = data.type
+        }
+
+        if(typeof data.published === 'boolean') {
+            story.published = data.published
+        }
 
         return story
     },
@@ -103,6 +155,28 @@ const Mutation =
 
         return line
     }, 
+    updateLine(parent, args, { db }, info) {
+        const { id, data } = args
+        const line = db.lines.find((line) => line.id === id)
+
+        if(!line) {
+            throw new Error('Line not found')
+        }
+
+        if(typeof data.name === 'string') {
+            line.name = data.name
+        }
+
+        if(typeof data.description === 'string') {
+            line.description = data.description
+        }
+
+        if(typeof data.colour === 'string') {
+            line.colour = data.colour
+        }
+
+        return line
+    },
     deleteLine(parent, args, { db }, info) {
         const lineIndex = db.lines.findIndex((line) => line.id === args.id)
 
@@ -142,6 +216,29 @@ const Mutation =
         db.cards.push(card);
 
         return card
+    },
+    updateCard(parent, args, { db }, info ) {
+        const { id, data } = args
+        const card = db.cards.find((card) => card.id === id)
+
+        if(!card) {
+            throw new Error('Card not found')
+        }
+
+        if(typeof data.title === 'string') {
+            card.title = data.title
+        }
+
+        if(typeof data.text === 'string') {
+            card.text = data.text
+        }
+
+        if(typeof data.type === 'string') {
+            card.type = data.type 
+        }
+
+        return card
+
     },
     deleteCard(parent, args, { db }, info) {
         const cardIndex = db.cards.findIndex((card) => card.id === args.id)

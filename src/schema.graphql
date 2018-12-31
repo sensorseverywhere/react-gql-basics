@@ -9,12 +9,16 @@
     type Mutation {
         createUser(data: CreateUserInput): User!
         deleteUser(id: ID!): User!
+        updateUser(id: ID!, data: UpdateUserInput): User!
         createStory(data: CreateStoryInput): Story!
         deleteStory(id: ID!): Story!
+        updateStory(id: ID!, data: UpdateStoryInput): Story!
         createLine(data: CreateLineInput): Line!
         deleteLine(id: ID!): Line!
+        updateLine(id: ID!, data: UpdateLineInput): Line!
         createCard(data: CreateCardInput): Card!
         deleteCard(id: ID!): Card!
+        updateCard(id: ID!, data: UpdateCardInput): Card!
     }
 
     input CreateUserInput {
@@ -23,12 +27,24 @@
         type: String!
     }
 
+    input UpdateUserInput {
+        name: String,
+        email: String
+        }
+
      input CreateStoryInput {
         title: String!,
         body: String!,
         type: String!,
         author: ID!,
         published: Boolean!
+    }
+
+    input UpdateStoryInput {
+        title: String,
+        body: String,
+        type: String,
+        published: Boolean
     }
 
     input CreateLineInput {
@@ -39,13 +55,25 @@
         colour: String!
     }
 
+    input UpdateLineInput {
+        name: String,
+        description: String, 
+        colour: String
+    }
+
     input CreateCardInput {
-        title: String!
-        text: String!
-        type: String!
-        author: ID!
-        story: ID!
+        title: String!,
+        text: String!,
+        type: String!,
+        author: ID!,
+        story: ID!,
         line: ID!
+    }
+
+    input UpdateCardInput {
+        title: String,
+        text: String,
+        type: String
     }
 
     type User {
