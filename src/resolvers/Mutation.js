@@ -184,6 +184,19 @@ const Mutation =
             throw new Error('Line not found')
         }
 
+
+
+        db.points = db.points.filter((point) => {
+            //check to see if there is an id match between the story and the author
+            const match = point.line === args.id
+
+            if(match) {
+                db.points = db.points.filter((point) => point.line !== args.id)
+            }
+
+            return !match
+        })
+
         const deletedLine = db.lines.splice(lineIndex, 1)
 
         db.cards = db.cards.filter((card) => card.lines !== args.id)

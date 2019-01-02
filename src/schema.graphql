@@ -112,6 +112,7 @@
         stories: [Story!]!
         lines: [Line!]!
         cards: [Card!]!
+        points: [Point!]
         subscribers: Int!
         isMember: Boolean!
     }
@@ -123,7 +124,8 @@
         type: String!
         author: User!
         lines: [Line!]!
-        points: [Point!]!
+        cards: [Card!]
+        points: [Point!]
         published: Boolean
     }
 
@@ -138,6 +140,7 @@
         toPointX: Float!
         toPointY: Float!
         cards: [Card!]
+        points: [Point!]
         colour: String!
     }
 
@@ -160,5 +163,5 @@
         author: User!
         stories: Story!
         line: Line!
-        point: Point
+        points: [Point]
     }

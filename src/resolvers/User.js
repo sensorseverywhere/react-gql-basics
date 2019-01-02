@@ -14,6 +14,11 @@ const User =
         return db.cards.filter((card) => {
             return card.author === parent.id
         })
+    },
+    points(parent, args, { db }, info) {
+        return db.points.filter((point) => {
+            return point.author === parent.id
+        })
     }
 }
 

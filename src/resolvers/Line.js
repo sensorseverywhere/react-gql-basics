@@ -14,6 +14,11 @@ const Line =
         return db.cards.filter((card) => {
             return card.line === parent.id
         })
+    },
+    points(parent, args, { db }, info) {
+        return db.points.filter((point) => {
+            return point.line === line.id
+        })
     }
 }
 

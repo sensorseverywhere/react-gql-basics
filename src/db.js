@@ -55,7 +55,8 @@ const lines = [
         name: 'main',
         description: 'The main story line',
         colour: 'black',
-        author: '1'
+        author: '1',
+        points: '1'
     },
     {
         id: '2',
@@ -120,6 +121,13 @@ const points = [
         x: 234.34,
         y: 345,
         line: '1',
+        colour: 'red'
+    },
+    {
+        id: '2',
+        x: 234.34,
+        y: 345,
+        line: '2',
         colour: 'red'
     }
 ]

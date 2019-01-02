@@ -7,7 +7,17 @@ const Story =
     },
     lines(parent, args, { db }, info) {
         return db.lines.filter((line) => {
-            return line.id === parent.id
+            return line.story === parent.id
+        })
+    },
+    cards(parent, args, { db }, info) {
+        return db.cards.filter((card) => {
+            return card.story === parent.id
+        })
+    },
+    points(parent, args, { db }, info) {
+        return db.points((point) => { 
+            return point.story === parent.id
         })
     }
 
