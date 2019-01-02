@@ -284,7 +284,6 @@ const Mutation =
         console.log(data)
 
         if(typeof data.x === 'number') {
-            console.log('number')
             point.x = data.x
         }
 
