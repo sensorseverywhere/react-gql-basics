@@ -32,6 +32,11 @@ const Query =
         if(!args.query) {
             return db.cards
         }
+    },
+    points(parent, args, { db }, info) {
+        if(!args.query) {
+            return db.points
+        }
     }
 }
 

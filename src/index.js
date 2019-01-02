@@ -5,6 +5,7 @@ import Mutation from './resolvers/Mutation'
 import User from './resolvers/User'
 import Story from './resolvers/Story'
 import Line from './resolvers/Line'
+import Point from './resolvers/Point'
 import Card from './resolvers/Card'
 
 const server = new GraphQLServer({
@@ -15,6 +16,7 @@ const server = new GraphQLServer({
         User,
         Story,
         Line,
+        Point,
         Card
     },
     context: {

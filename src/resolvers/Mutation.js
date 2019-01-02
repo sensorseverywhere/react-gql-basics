@@ -252,6 +252,39 @@ const Mutation =
         return deletedCard[0]
 
     },
+    createPoint(parent, args, { db }, info) {
+        const userExists = db.users.some((user) => user.id === args.data.author)
+        const storyExists = db.stories.find((story) => story.id === args.data.story)
+        
+        if(!userExists) {
+            throw new Error('User not found')
+        }
+
+        if(!storyExists) {
+            throw new Error('Story not found')
+        }
+
+        const point = {
+            id: uuidv4(),
+            ...args.data
+        }
+
+        db.points.push(point);
+
+        return point
+    },
+    deletePoint(parent, args, { db }, info) {
+        const { id, data } = args
+        const pointIndex = db.points.findIndex((point) => point.id === id)
+
+        if( pointIndex === -1 ) {
+            throw new Error('Point not found') 
+        }
+        
+        const deletedPoint = db.points.splice(pointIndex, 1)
+
+        return deletedPoint[0]
+    }
 }
 
 export { Mutation as default }

@@ -4,6 +4,7 @@
         stories(query: String): [Story!]!
         lines(query: String): [Line!]!
         cards(query: String): [Card!]!
+        points(query: String): [Point!]!
     }
 
     type Mutation {
@@ -19,6 +20,8 @@
         createCard(data: CreateCardInput): Card!
         deleteCard(id: ID!): Card!
         updateCard(id: ID!, data: UpdateCardInput): Card!
+        createPoint(data: CreatePointInput): Point!
+        deletePoint(id: ID!): Point!
     }
 
     input CreateUserInput {
@@ -76,6 +79,16 @@
         type: String
     }
 
+    input CreatePointInput {
+        x: Float!,
+        y: Float!,
+        line: ID,
+        author: ID!,
+        card: ID,
+        story: ID!,
+        colour: String
+    }
+
     type User {
         id: ID!
         name: String!
@@ -95,6 +108,7 @@
         type: String!
         author: User!
         lines: [Line!]!
+        points: [Point!]!
         published: Boolean
     }
 
@@ -104,7 +118,19 @@
         description: String!
         author: User!
         stories: Story!
+        point: [Point!]!
         cards: [Card!]
+        colour: String!
+    }
+
+    type Point {
+        id: ID!
+        x: Float!
+        y: Float!
+        line: [Line!]!
+        author: User!
+        story: Story!
+        card: Card!
         colour: String!
     }
 
@@ -116,4 +142,5 @@
         author: User!
         stories: Story!
         line: Line!
+        point: Point
     }

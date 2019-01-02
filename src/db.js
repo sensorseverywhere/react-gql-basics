@@ -114,11 +114,22 @@ const cards = [
     }
 ]
 
+const points = [
+    {
+        id: '1',
+        x: 234.34,
+        y: 345,
+        line: '1',
+        colour: 'red'
+    }
+]
+
 const db = {
     users,
     stories,
     lines,
-    cards
+    cards,
+    points
 }
 
 export { db as default }
