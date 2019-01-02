@@ -273,6 +273,31 @@ const Mutation =
 
         return point
     },
+    updatePoint(parent, args, { db }, info) {
+        const { id, data } = args
+        const point = db.points.find((point) => point.id === id) 
+
+        if(!point) {
+            throw new Error('Point not found')
+        }
+
+        console.log(data)
+
+        if(typeof data.x === 'number') {
+            console.log('number')
+            point.x = data.x
+        }
+
+        if(typeof data.y === 'number') {
+            point.y = data.y
+        }
+
+        if(typeof data.colour === 'string') {
+            point.colour = data.colour 
+        }
+        
+        return point
+    },
     deletePoint(parent, args, { db }, info) {
         const { id, data } = args
         const pointIndex = db.points.findIndex((point) => point.id === id)

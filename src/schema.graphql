@@ -22,6 +22,7 @@
         updateCard(id: ID!, data: UpdateCardInput): Card!
         createPoint(data: CreatePointInput): Point!
         deletePoint(id: ID!): Point!
+        updatePoint(id: ID!, data: UpdatePointInput): Point!
     }
 
     input CreateUserInput {
@@ -86,6 +87,12 @@
         author: ID!,
         card: ID,
         story: ID!,
+        colour: String
+    }
+
+    input UpdatePointInput {
+        x: Float,
+        y: Float,
         colour: String
     }
 
