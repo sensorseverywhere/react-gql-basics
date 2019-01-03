@@ -35,7 +35,7 @@ const stories = [
         title: 'My first piece of content',
         body: 'Here is a short story',
         type: 'Short Story',
-        author: '1',
+        author: '2',
         published: false
     },
     {
@@ -43,7 +43,7 @@ const stories = [
         title: 'My second piece of content',
         body: 'Here is a novel',
         type: 'Novel',
-        author: '2',
+        author: '1',
         published: true
     },
 ]
@@ -88,7 +88,7 @@ const lines = [
 const cards = [
     {
         id: '1',
-        author: '1',
+        author: '2',
         story: '1',
         line: '1',
         title: "Jellys Character Card",
@@ -106,8 +106,8 @@ const cards = [
     },
     {
         id: '3',
-        author: '1',
-        story: '2',
+        author: '2',
+        story: '4',
         line: '3',
         title: "Jellys Character Card",
         text: "Jelly first meets Boo",
@@ -121,13 +121,17 @@ const points = [
         x: 234.34,
         y: 345,
         line: '1',
-        colour: 'red'
+        colour: 'red',
+        author: '1',
+        story: '2'
     },
     {
         id: '2',
         x: 234.34,
         y: 345,
         line: '2',
+        author: '2',
+        story: '2',
         colour: 'red'
     }
 ]

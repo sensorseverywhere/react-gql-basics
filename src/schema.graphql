@@ -1,167 +1,172 @@
  type Query {
-        user: User!
-        users(query: String): [User!]!
-        stories(query: String): [Story!]!
-        lines(query: String): [Line!]!
-        cards(query: String): [Card!]!
-        points(query: String): [Point!]!
+    user: User!
+    users(query: String): [User!]!
+    stories(query: String): [Story!]!
+    lines(query: String): [Line!]!
+    cards(query: String): [Card!]!
+    points(query: String): [Point!]!
+}
+
+type Mutation {
+    createUser(data: CreateUserInput): User!
+    deleteUser(id: ID!): User!
+    updateUser(id: ID!, data: UpdateUserInput): User!
+    createStory(data: CreateStoryInput): Story!
+    deleteStory(id: ID!): Story!
+    updateStory(id: ID!, data: UpdateStoryInput): Story!
+    createLine(data: CreateLineInput): Line!
+    deleteLine(id: ID!): Line!
+    updateLine(id: ID!, data: UpdateLineInput): Line!
+    createCard(data: CreateCardInput): Card!
+    deleteCard(id: ID!): Card!
+    updateCard(id: ID!, data: UpdateCardInput): Card!
+    createPoint(data: CreatePointInput): Point!
+    deletePoint(id: ID!): Point!
+    updatePoint(id: ID!, data: UpdatePointInput): Point!
+}
+
+type Subscription {
+    count: Int!
+    card(storyId: ID!): Card!
+}
+
+input CreateUserInput {
+    name: String!,
+    email: String!,
+    type: String!
+}
+
+input UpdateUserInput {
+    name: String,
+    email: String
     }
 
-    type Mutation {
-        createUser(data: CreateUserInput): User!
-        deleteUser(id: ID!): User!
-        updateUser(id: ID!, data: UpdateUserInput): User!
-        createStory(data: CreateStoryInput): Story!
-        deleteStory(id: ID!): Story!
-        updateStory(id: ID!, data: UpdateStoryInput): Story!
-        createLine(data: CreateLineInput): Line!
-        deleteLine(id: ID!): Line!
-        updateLine(id: ID!, data: UpdateLineInput): Line!
-        createCard(data: CreateCardInput): Card!
-        deleteCard(id: ID!): Card!
-        updateCard(id: ID!, data: UpdateCardInput): Card!
-        createPoint(data: CreatePointInput): Point!
-        deletePoint(id: ID!): Point!
-        updatePoint(id: ID!, data: UpdatePointInput): Point!
-    }
+    input CreateStoryInput {
+    title: String!,
+    body: String!,
+    type: String!,
+    author: ID!,
+    published: Boolean!
+}
 
-    input CreateUserInput {
-        name: String!,
-        email: String!,
-        type: String!
-    }
+input UpdateStoryInput {
+    title: String,
+    body: String,
+    type: String,
+    published: Boolean
+}
 
-    input UpdateUserInput {
-        name: String,
-        email: String
-        }
+input CreateLineInput {
+    name: String!,
+    description: String!, 
+    fromPointX: Float!,
+    fromPointY: Float!,
+    toPointX: Float!,
+    toPointY: Float!, 
+    author: ID!, 
+    story: ID!,
+    colour: String!
+}
 
-     input CreateStoryInput {
-        title: String!,
-        body: String!,
-        type: String!,
-        author: ID!,
-        published: Boolean!
-    }
+input UpdateLineInput {
+    name: String,
+    description: String, 
+    colour: String,
+    fromPointX: Float,
+    fromPointY: Float,
+    toPointX: Float,
+    toPointY: Float
+}
 
-    input UpdateStoryInput {
-        title: String,
-        body: String,
-        type: String,
-        published: Boolean
-    }
+input CreateCardInput {
+    title: String!,
+    text: String!,
+    type: String!,
+    author: ID!,
+    story: ID!,
+    line: ID!
+}
 
-    input CreateLineInput {
-        name: String!,
-        description: String!, 
-        fromPointX: Float!,
-        fromPointY: Float!,
-        toPointX: Float!,
-        toPointY: Float!, 
-        author: ID!, 
-        story: ID!,
-        colour: String!
-    }
+input UpdateCardInput {
+    title: String,
+    text: String,
+    type: String
+}
 
-    input UpdateLineInput {
-        name: String,
-        description: String, 
-        colour: String,
-        fromPointX: Float,
-        fromPointY: Float,
-        toPointX: Float,
-        toPointY: Float
-    }
+input CreatePointInput {
+    x: Float!,
+    y: Float!,
+    line: ID,
+    author: ID!,
+    card: ID,
+    story: ID!,
+    colour: String
+}
 
-    input CreateCardInput {
-        title: String!,
-        text: String!,
-        type: String!,
-        author: ID!,
-        story: ID!,
-        line: ID!
-    }
+input UpdatePointInput {
+    x: Float,
+    y: Float,
+    colour: String
+}
 
-    input UpdateCardInput {
-        title: String,
-        text: String,
-        type: String
-    }
+type User {
+    id: ID!
+    name: String!
+    email: String!
+    type: String!
+    stories: [Story!]!
+    lines: [Line!]!
+    cards: [Card!]!
+    points: [Point!]
+    subscribers: Int!
+    isMember: Boolean!
+}
 
-    input CreatePointInput {
-        x: Float!,
-        y: Float!,
-        line: ID,
-        author: ID!,
-        card: ID,
-        story: ID!,
-        colour: String
-    }
+type Story {
+    id: ID!
+    title: String!
+    body: String!
+    type: String!
+    author: User!
+    lines: [Line!]!
+    cards: [Card!]
+    points: [Point!]
+    published: Boolean
+}
 
-    input UpdatePointInput {
-        x: Float,
-        y: Float,
-        colour: String
-    }
+type Line {
+    id: ID!
+    name: String!
+    description: String!
+    author: User!
+    stories: Story!
+    fromPointX: Float!
+    fromPointY: Float!
+    toPointX: Float!
+    toPointY: Float!
+    cards: [Card!]
+    points: [Point!]
+    colour: String!
+}
 
-    type User {
-        id: ID!
-        name: String!
-        email: String!
-        type: String!
-        stories: [Story!]!
-        lines: [Line!]!
-        cards: [Card!]!
-        points: [Point!]
-        subscribers: Int!
-        isMember: Boolean!
-    }
+type Point {
+    id: ID!
+    x: Float!
+    y: Float!
+    line: [Line!]!
+    author: User!
+    story: Story!
+    card: Card!
+    colour: String!
+}
 
-    type Story {
-        id: ID!
-        title: String!
-        body: String!
-        type: String!
-        author: User!
-        lines: [Line!]!
-        cards: [Card!]
-        points: [Point!]
-        published: Boolean
-    }
-
-    type Line {
-        id: ID!
-        name: String!
-        description: String!
-        author: User!
-        stories: Story!
-        fromPointX: Float!
-        fromPointY: Float!
-        toPointX: Float!
-        toPointY: Float!
-        cards: [Card!]
-        points: [Point!]
-        colour: String!
-    }
-
-    type Point {
-        id: ID!
-        x: Float!
-        y: Float!
-        line: [Line!]!
-        author: User!
-        story: Story!
-        card: Card!
-        colour: String!
-    }
-
-    type Card {
-        id: ID!
-        title: String!
-        text: String!
-        type: String!
-        author: User!
-        stories: Story!
-        line: Line!
-        points: [Point]
-    }
+type Card {
+    id: ID!
+    title: String!
+    text: String!
+    type: String!
+    author: User!
+    stories: Story!
+    line: Line!
+    points: [Point]
+}

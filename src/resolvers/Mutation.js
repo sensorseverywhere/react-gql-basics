@@ -204,7 +204,7 @@ const Mutation =
         return deletedLine[0]
 
     },
-    createCard(parent, args, { db }, info) {
+    createCard(parent, args, { db, pubsub  }, info) {
         const userExists = db.users.some((user) => user.id === args.data.author)
         const storyExists = db.stories.find((story) => story.id === args.data.story)
         const lineExists = db.lines.filter((line) => line.id === args.data.line)
@@ -227,6 +227,7 @@ const Mutation =
         }
 
         db.cards.push(card);
+        pubsub.publish(`card ${args.data.story}`, { card: card })
 
         return card
     },
